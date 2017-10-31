@@ -59,10 +59,13 @@ function emissivity_data(srcdata,initrefdata,refdata)
 end
 
 " Compare simulation and measurment "
-function comparison(srcdata,initrefdata,refdata,substrate :: MultiLayer)
+function comparison(srcdata,initrefdata,refdata,substrate :: MultiLayer; save = false, outputfilename = "")
     emdata   = emissivity_data(srcdata,initrefdata,refdata)
     emw      = copy(emdata)
     emw[:,2] = emissivity_kx_w.([substrate],0.0, emdata[:,1]).*0.5
+    if save == true
+        save_data(emdata,emw,outputfilename)
+    end
     plot_data(emdata,emw)
 end
 
