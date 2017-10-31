@@ -1,7 +1,11 @@
 module AnalysisFTIR
 
-using RadiativeHeat, Plots; pyplot(), DataFrames
+using RadiativeHeat, Plots; pyplot()
+using DataFrames
 
+export load_data,convertto_freq,convertto_wavel,
+       unnormalize,mynormalize,plot_data,reflectivity_data,
+       emissivity_data,comparison
 
 " Load the data and put into an array "
 function load_data(filename)
