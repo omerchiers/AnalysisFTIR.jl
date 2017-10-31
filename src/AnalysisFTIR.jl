@@ -5,11 +5,12 @@ using DataFrames
 
 export load_data,convertto_freq,convertto_wavel,
        unnormalize,mynormalize,plot_data,reflectivity_data,
-       emissivity_data,comparison
+       emissivity_data,comparison,
+       save_data
 
 " Load the data and put into an array "
 function load_data(filename)
-    df    =  readtable(filename; separator = ' ', header=false)
+    df    = readtable(filename; separator = ' ', header=false)
     mdata = convert(Array,df)
     return mdata
 end
@@ -50,18 +51,29 @@ function reflectivity_data(srcdata,initrefdata,refdata)
     return data2
 end
 
+" Get the emissivity from the reflectivity measurement "
 function emissivity_data(srcdata,initrefdata,refdata)
     data      = reflectivity_data(srcdata,initrefdata,refdata)
     data[:,2].= 1.0 .- data[:,2]
     return data
 end
 
-
+" Compare simulation and measurment "
 function comparison(srcdata,initrefdata,refdata,substrate :: MultiLayer)
     emdata   = emissivity_data(srcdata,initrefdata,refdata)
     emw      = copy(emdata)
     emw[:,2] = emissivity_kx_w.([substrate],0.0, emdata[:,1]).*0.5
     plot_data(emdata,emw)
 end
+
+" Save experimental and simulated emissivity to a *.dat file"
+function save_data(data_exp,data_sim,outputfilename)
+    df        = DataFrame()
+    df[:freq] = data_exp[:,1]
+    df[:Data] = data_exp[:,2]
+    df[:Fit]  = data_sim[:,2]
+    writetable(outputfilename, df,separator = ' ')
+end
+
 
 end # module
