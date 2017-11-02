@@ -1,6 +1,6 @@
 module AnalysisFTIR
 
-using RadiativeHeat, Plots; pyplot()
+using MultiLayerNFRT, Plots; pyplot()
 using DataFrames
 
 export load_data,convertto_freq,convertto_wavel,
