@@ -1,12 +1,12 @@
 module AnalysisFTIR
 
 using MultiLayerNFRHT, Plots; pyplot()
-using DataFrames
+using DataFrames, LsqFit
 
 export load_data,convertto_freq,convertto_wavel,
        unnormalize,mynormalize,plot_data,reflectivity_data,
        emissivity_data,comparison,
-       save_data
+       save_data, fit_data
 
 " Load the data and put into an array "
 function load_data(filename)
@@ -58,7 +58,7 @@ function emissivity_data(srcdata,initrefdata,refdata)
     return data
 end
 
-" Compare simulation and measurment "
+" Compare simulation and measurement "
 function comparison(srcdata,initrefdata,refdata,substrate :: MultiLayer; save = false, outputfilename = "")
     emdata   = emissivity_data(srcdata,initrefdata,refdata)
     emw      = copy(emdata)
@@ -68,6 +68,30 @@ function comparison(srcdata,initrefdata,refdata,substrate :: MultiLayer; save = 
     end
     plot_data(emdata,emw)
 end
+
+
+" Fit model to experimental data "
+function fit_data(xdata, ydata, p; save = false, outputfilename = "")
+    fit      = curve_fit(emissivity_model,xdata,ydata,p)
+    fit_data = zeros(xdata)
+    for i=1:length(xdata)
+        fit_data[i] = emissivity_model(xdata[i], fit.param)
+    end
+    if save == true
+        outputfilename = outputfilename*"th_Au="*string(fit.param[1])*"m_gamma_Au="*string(fit.param[2])*"radHz_th_Si="*string(fit.param[3])*"m"
+        save_data([xdata  ydata] , fit_data, outputfilename)
+    end
+    data = [xdata  ydata  fit_data]
+    plot_data([xdata ydata],[xdata fit_data])
+end
+
+" Model function for fitting the data. To be modified because Au() is immutable "
+function emissivity_model(x, p)
+    substrate =[Layer(Cst()) , Layer(Au(p[2]),p[1]) , Layer(Si(),p[3]) , Layer(Au())]
+    return emissivity_kx_w.([substrate], 0.0, x).*0.5
+end
+
+
 
 " Save experimental and simulated emissivity to a *.dat file"
 function save_data(data_exp,data_sim,outputfilename)
