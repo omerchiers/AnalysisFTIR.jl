@@ -87,7 +87,8 @@ end
 
 " Model function for fitting the data. To be modified because Au() is immutable "
 function emissivity_model(x, p)
-    substrate =[Layer(Cst()) , Layer(Au(p[2]),p[1]) , Layer(Si(),p[3]) , Layer(Au())]
+    q = p*1e-9
+    substrate =[Layer(Cst()) , Layer(Au(q[2]),q[1]) , Layer(Si(),q[3]) , Layer(Au())]
     return emissivity_kx_w.([substrate], 0.0, x).*0.5
 end
 
