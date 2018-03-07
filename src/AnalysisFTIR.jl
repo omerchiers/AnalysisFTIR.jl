@@ -73,16 +73,16 @@ end
 " Fit model to experimental data "
 function fit_data(xdata, ydata, p; save = false, outputfilename = "")
     fit      = curve_fit(emissivity_model,xdata,ydata,p)
-    fit_data = zeros(xdata)
-    fit_data = emissivity_model(xdata, fit.param)
+    fit_dat = zeros(xdata)
+    fit_dat = emissivity_model(xdata, fit.param)
+    df_fit   = value_of_fit(fit)
     if save == true
-        outputfilename = outputfilename*"th_Au="*string(fit.param[1])*"m_gamma_Au="*string(fit.param[2])*"radHz_th_Si="*string(fit.param[3])*"m"
-        save_data([xdata  ydata] , fit_data, outputfilename)
+        save_data([xdata  ydata] ,[xdata fit_dat], outputfilename)
+        writetable(outputfilename*"_parameters",df_fit)
     end
-    data = [xdata  ydata  fit_data]
-    df = value_of_fit(fit)
-    println(df)
-    plot_data([xdata ydata],[xdata fit_data])
+    data = [xdata  ydata  fit_dat]
+    println(df_fit)
+    plot_data([xdata ydata],[xdata fit_dat])
 end
 
 function value_of_fit(fit)
