@@ -74,9 +74,7 @@ end
 function fit_data(xdata, ydata, p; save = false, outputfilename = "")
     fit      = curve_fit(emissivity_model,xdata,ydata,p)
     fit_data = zeros(xdata)
-    for i=1:length(xdata)
-        fit_data[i] = emissivity_model(xdata[i], fit.param)
-    end
+    fit_data = emissivity_model(xdata, fit.param)
     if save == true
         outputfilename = outputfilename*"th_Au="*string(fit.param[1])*"m_gamma_Au="*string(fit.param[2])*"radHz_th_Si="*string(fit.param[3])*"m"
         save_data([xdata  ydata] , fit_data, outputfilename)
