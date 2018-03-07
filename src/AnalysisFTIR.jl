@@ -80,7 +80,16 @@ function fit_data(xdata, ydata, p; save = false, outputfilename = "")
         save_data([xdata  ydata] , fit_data, outputfilename)
     end
     data = [xdata  ydata  fit_data]
+    df = value_of_fit(fit)
+    println(df)
     plot_data([xdata ydata],[xdata fit_data])
+end
+
+function value_of_fit(fit)
+    df = DataFrame()
+    df[:Parameters] = ["Electron mean free path (nm)"; "Gold layer thickness (nm)" ; "Si layer thickness (nm)"]
+    df[:Values]     = [fit.param[2] ; fit.param[1] ; fit.param[3]]
+    return df
 end
 
 " Model function for fitting the data. To be modified because Au() is immutable "
