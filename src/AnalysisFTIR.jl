@@ -5,7 +5,7 @@ using DataFrames, LsqFit
 
 export load_data,convertto_freq,convertto_wavel,
        unnormalize,mynormalize,plot_data,reflectivity_data,
-       emissivity_data,comparison,
+       emissivity_data,comparison,emissivity_model,
        save_data, fit_data
 
 " Load the data and put into an array "
