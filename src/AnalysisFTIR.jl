@@ -7,7 +7,6 @@ export load_data,convertto_freq,convertto_wavel,
        unnormalize,mynormalize,plot_data,reflectivity_data,
        emissivity_data,comparison,emissivity_model,
        save_data, fit_data
-
 " Load the data and put into an array "
 function load_data(filename)
     df    = readtable(filename; separator = ' ', header=false)
@@ -71,7 +70,7 @@ end
 
 
 " Fit model to experimental data "
-function fit_data(xdata, ydata, p; save = false, outputfilename = "")
+function fit_data(emissivity_model, xdata, ydata, p; save = false, outputfilename = "")
     fit      = curve_fit(emissivity_model,xdata,ydata,p)
     fit_dat = zeros(xdata)
     fit_dat = emissivity_model(xdata, fit.param)
@@ -87,18 +86,10 @@ end
 
 function value_of_fit(fit)
     df = DataFrame()
-    df[:Parameters] = ["Electron mean free path (nm)"; "Gold layer thickness (nm)" ; "Si layer thickness (nm)"]
-    df[:Values]     = [fit.param[2] ; fit.param[1] ; fit.param[3]]
+    df[:Parameters] = ["Electron mean free path (nm)"; "Gold layer thickness (nm)" ; "Si layer thickness (nm)" ; "Square sum of residuals" ]
+    df[:Values]     = [fit.param[2] ; fit.param[1] ; fit.param[3] ; sum(fit.resid.^2) ]
     return df
 end
-
-" Model function for fitting the data. To be modified because Au() is immutable "
-function emissivity_model(x, p)
-    q = p*1e-9
-    substrate =[Layer(Cst()) , Layer(Au(q[2]),q[1]) , Layer(Si(),q[3]) , Layer(Au())]
-    return emissivity_kx_w.([substrate], 0.0, x).*0.5
-end
-
 
 
 " Save experimental and simulated emissivity to a *.dat file"
