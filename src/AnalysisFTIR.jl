@@ -7,6 +7,18 @@ export load_data,convertto_freq,convertto_wavel,
        unnormalize,mynormalize,plot_data,reflectivity_data,
        emissivity_data,comparison,emissivity_model,
        save_data, fit_data
+
+const options = Dict(:au_mfp => "Electron mean free path (nm)",
+                     :au_th  => "Gold thickness (nm)",
+                     :si_th  => "Si thickness (nm)",
+                     :resid2 => "Square sum of residuals")
+
+" Fitting options "
+function option(opt :: Symbol)
+    return options[opt]
+end
+
+
 " Load the data and put into an array "
 function load_data(filename)
     df    = readtable(filename; separator = ' ', header=false)
