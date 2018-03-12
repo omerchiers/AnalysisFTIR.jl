@@ -113,5 +113,13 @@ function save_data(data_exp,data_sim,outputfilename)
     writetable(outputfilename, df,separator = ' ')
 end
 
+" Sliding window average "
+function window_average(data :: AbstractArray, window :: Integer)
+    data_av = zeros(length(data))
+    for i=1:length(data)
+        data_av[i] = mean(data[i:min(i+window-1,end)])
+    end
+    return data_av
+end
 
 end # module
