@@ -6,7 +6,8 @@ using DataFrames, LsqFit
 export load_data,convertto_freq,convertto_wavel,
        unnormalize,mynormalize,plot_data,reflectivity_data,
        emissivity_data,comparison,emissivity_model,
-       save_data, fit_data
+       save_data, fit_data,
+       window_average, savitsky_golay
 
 const options = Dict(:au_mfp => "Electron mean free path (nm)",
                      :au_th  => "Gold thickness (nm)",
@@ -121,5 +122,37 @@ function window_average(data :: AbstractArray, window :: Integer)
     end
     return data_av
 end
+
+" Savitsky-Golay filter for smoothing data "
+function savitsky_golay(x::Vector, windowSize::Integer, polyOrder::Integer; deriv::Integer=0)
+
+    #Some error checking
+    @assert isodd(windowSize) "Window size must be an odd integer."
+    @assert polyOrder < windowSize "Polynomial order must me less than window size."
+
+    halfWindow = Int((windowSize-1)/2)
+
+    #Setup the S matrix of basis vectors.
+    S = zeros(windowSize, polyOrder+1)
+    for ct = 0:polyOrder
+	    S[:,ct+1] = collect(-halfWindow:halfWindow).^(ct)
+    end
+
+    #Compute the filter coefficients for all orders
+    #From the scipy code it seems pinv(S) and taking rows should be enough
+    G = S*pinv(S'*S)
+
+    #Slice out the derivative order we want
+    filterCoeffs = G[:,deriv+1] * factorial(deriv)
+
+    #Pad the signal with the endpoints and convolve with filter
+    paddedX = [x[1]*ones(halfWindow); x ; x[end]*ones(halfWindow)]
+    y = conv(filterCoeffs[end:-1:1], paddedX)
+
+    #Return the valid midsection
+    return y[2*halfWindow+1:end-2*halfWindow]
+
+end
+
 
 end # module
