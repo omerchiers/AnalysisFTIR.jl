@@ -59,7 +59,7 @@ function reflectivity_data(srcdata,initrefdata,refdata)
     data2      = zeros(refdat)
     data2[:,1] = convertto_freq(data1[:,1])
     data2[:,2] = unnormalize(data1,initrefdat)
-    data2[:,2] = mynormalize(data1,refdat)
+    data2[:,2] = mynormalize(data2,refdat)
     return data2
 end
 
