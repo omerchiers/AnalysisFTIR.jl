@@ -42,8 +42,8 @@ mynormalize(data,normdata) = data[:,2]./normdata[:,2]
 
 " Plot reflectivity/emissivity as a function of frequency"
 function plot_data(data1,data2)
-    plot(data1[:,1],data1[:,2]; xscale= :log10)
-    plot!(data2[:,1],data2[:,2]; xscale= :log10)
+    plot(data1[:,1],data1[:,2]; xscale= :log10,ylim=(0,1))
+    plot!(data2[:,1],data2[:,2]; xscale= :log10,ylim=(0,1))
 end
 
 """
