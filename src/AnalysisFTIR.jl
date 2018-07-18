@@ -99,8 +99,8 @@ end
 
 function value_of_fit(fit, dict)
     df = DataFrame()
-    df[:Parameters] = [collect(keys(dict)) , "Sum residuals"]
-    df[:Values]     = [fit.param[i] for i in collect(values(dict)) , sum(fit.resid.^2)]
+    df[:Parameters] = [collect(keys(dict)) ; "Sum residuals"]
+    df[:Values]     = [fit.param[i] for i in collect(values(dict)) ; sum(fit.resid.^2)]
     return df
 end
 
