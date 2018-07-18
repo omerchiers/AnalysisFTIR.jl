@@ -9,10 +9,11 @@ export load_data,convertto_freq,convertto_wavel,
        save_data, fit_data,
        window_average, savitsky_golay
 
-const options = Dict(:au_mfp => "Electron mean free path (nm)",
-                     :au_th  => "Gold thickness (nm)",
-                     :si_th  => "Si thickness (nm)",
-                     :resid2 => "Square sum of residuals")
+
+const dfltoptions = Dict("Au layer thickness (nm)" => 1,
+                         "Electron mean free path (nm)" => 2 ,
+                         "Si layer thickness (nm)" => 3 )
+
 
 " Fitting options "
 function option(opt :: Symbol)
@@ -82,11 +83,11 @@ end
 
 
 " Fit model to experimental data "
-function fit_data(emissivity_model, xdata, ydata, p; save = false, outputfilename = "")
-    fit      = curve_fit(emissivity_model,xdata,ydata,p)
+function fit_data(emissivity_model, xdata, ydata, p; save = false, outputfilename = "" ,opt=dfltoptions)
+    fit     = curve_fit(emissivity_model,xdata,ydata,p)
     fit_dat = zeros(xdata)
     fit_dat = emissivity_model(xdata, fit.param)
-    df_fit   = value_of_fit(fit)
+    df_fit = value_of_fit(fit,opt)
     if save == true
         save_data([xdata  ydata] ,[xdata fit_dat], outputfilename)
         writetable(outputfilename*"_parameters",df_fit)
@@ -96,10 +97,10 @@ function fit_data(emissivity_model, xdata, ydata, p; save = false, outputfilenam
     plot_data([xdata ydata],[xdata fit_dat])
 end
 
-function value_of_fit(fit)
+function value_of_fit(fit, dict)
     df = DataFrame()
-    df[:Parameters] = ["Electron mean free path (nm)"; "Gold layer thickness (nm)" ; "Si layer thickness (nm)" ; "Square sum of residuals" ]
-    df[:Values]     = [fit.param[2] ; fit.param[1] ; fit.param[3] ; sum(fit.resid.^2) ]
+    df[:Parameters] = [collect(keys(dict)) , "Sum residuals"]
+    df[:Values]     = [fit.param[i] for i in collect(values(dict)) , sum(fit.resid.^2)]
     return df
 end
 
