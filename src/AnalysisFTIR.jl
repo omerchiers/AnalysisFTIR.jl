@@ -57,7 +57,7 @@ function reflectivity_data(srcdata,initrefdata,refdata)
     initrefdat = load_data(initrefdata)
     refdat     = load_data(refdata)
 
-    data2      = zeros(refdat)
+    data2      = similar(refdat)
     data2[:,1] = convertto_freq.(data1[:,1])
     data2[:,2] = mynormalize(data1,refdat) # since both datasets are devided by the same signal, unnormalize is not necessary
     return data2
@@ -85,7 +85,7 @@ end
 " Fit model to experimental data "
 function fit_data(emissivity_model, xdata, ydata, p; save = false, outputfilename = "" ,opt=dfltoptions)
     fit     = curve_fit(emissivity_model,xdata,ydata,p)
-    fit_dat = zeros(xdata)
+    fit_dat = similar(xdata)
     fit_dat = emissivity_model(xdata, fit.param)
     df_fit = value_of_fit(fit,opt)
     if save == true
