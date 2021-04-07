@@ -4,6 +4,7 @@ authors = ["Olivier Merchiers <omerchiers@gmail.com> and contributors"]
 version = "0.1.0"
 
 [deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 LsqFit = "2fda8390-95c7-5789-9bda-21331edee243"
 MultiLayerNFRHT = "1437eaf2-1009-11e9-29b3-179d2bd09029"
