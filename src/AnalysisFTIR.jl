@@ -23,7 +23,7 @@ end
 
 " Load the data and put into an array "
 function load_data(filename)
-    df    = DataFrame(CSV.File(filename; separator = ' ', header=false))
+    df    = DataFrame(CSV.File(filename))
     mdata = convert(Array,df)
     return mdata
 end
