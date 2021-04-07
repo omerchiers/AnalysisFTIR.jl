@@ -58,7 +58,7 @@ function reflectivity_data(srcdata,initrefdata,refdata)
     refdat     = load_data(refdata)
 
     data2      = zeros(refdat)
-    data2[:,1] = convertto_freq(data1[:,1])
+    data2[:,1] = convertto_freq.(data1[:,1])
     data2[:,2] = mynormalize(data1,refdat) # since both datasets are devided by the same signal, unnormalize is not necessary
     return data2
 end
