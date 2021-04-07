@@ -1,7 +1,7 @@
 module AnalysisFTIR
 
 using MultiLayerNFRHT, Plots; pyplot()
-using DataFrames, LsqFit
+using CSV, DataFrames, LsqFit
 
 export load_data,convertto_freq,convertto_wavel,
        unnormalize,mynormalize,plot_data,reflectivity_data,
@@ -23,7 +23,7 @@ end
 
 " Load the data and put into an array "
 function load_data(filename)
-    df    = readtable(filename; separator = ' ', header=false)
+    df    = DataFrame(CSV.File(filename; separator = ' ', header=false))
     mdata = convert(Array,df)
     return mdata
 end
