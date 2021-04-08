@@ -1,6 +1,6 @@
 module AnalysisFTIR
 
-using MultiLayerNFRHT, Plots; pyplot()
+using MultiLayerNFRHT, Plots
 using CSV, DataFrames, LsqFit
 
 export load_data,convertto_freq,convertto_wavel,
