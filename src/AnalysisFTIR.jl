@@ -10,11 +10,6 @@ export load_data,convertto_freq,convertto_wavel,
        window_average, savitsky_golay
 
 
-const dfltoptions = Dict("Au layer thickness (nm)" => 1,
-                         "Electron mean free path (nm)" => 2 ,
-                         "Si layer thickness (nm)" => 3 )
-
-
 " Fitting options "
 function option(opt :: Symbol)
     return options[opt]
@@ -83,7 +78,7 @@ end
 
 
 " Fit model to experimental data "
-function fit_data(emissivity_model, xdata, ydata, p; save = false, outputfilename = "" ,opt=dfltoptions)
+function fit_data(emissivity_model, xdata, ydata, p; save = false, outputfilename = "" ,opt = Dict("parameter 1 (unit)"=> 1))
     fit     = curve_fit(emissivity_model,xdata,ydata,p)
     fit_dat = similar(xdata)
     fit_dat = emissivity_model(xdata, fit.param)
@@ -99,8 +94,8 @@ end
 
 function value_of_fit(fit, dict)
     df = DataFrame()
-    df[:Parameters] = [collect(keys(dict)) ; "Sum residuals"]
-    df[:Values]     = [[fit.param[i] for i in collect(values(dict))] ; sum(fit.resid.^2)]
+    df[!,:Parameters] = [collect(keys(dict)) ; "Sum residuals"]
+    df[!,:Values]     = [[fit.param[i] for i in collect(values(dict))] ; sum(fit.resid.^2)]
     return df
 end
 
@@ -108,9 +103,9 @@ end
 " Save experimental and simulated emissivity to a *.dat file"
 function save_data(data_exp,data_sim,outputfilename)
     df        = DataFrame()
-    df[:freq] = data_exp[:,1]
-    df[:Data] = data_exp[:,2]
-    df[:Fit]  = data_sim[:,2]
+    df[!,:freq] = data_exp[:,1]
+    df[!,:Data] = data_exp[:,2]
+    df[!,:Fit]  = data_sim[:,2]
     writetable(outputfilename, df,separator = ' ')
 end
 
