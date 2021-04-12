@@ -3,7 +3,7 @@ module AnalysisFTIR
 using MultiLayerNFRHT, Plots
 using CSV, DataFrames, LsqFit
 using DSP
-using LinearAlgebra
+using LinearAlgebra, Statistics
 
 
 export load_data,convertto_freq,convertto_wavel,
