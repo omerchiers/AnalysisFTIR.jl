@@ -2,6 +2,9 @@ module AnalysisFTIR
 
 using MultiLayerNFRHT, Plots
 using CSV, DataFrames, LsqFit
+using DSP
+using LinearAlgebra
+
 
 export load_data,convertto_freq,convertto_wavel,
        unnormalize,mynormalize,plot_data,reflectivity_data,
