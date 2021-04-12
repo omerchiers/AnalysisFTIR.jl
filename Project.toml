@@ -13,6 +13,7 @@ MultiLayerNFRHT = "1437eaf2-1009-11e9-29b3-179d2bd09029"
 MyPhysicalConstants = "03bd0ab0-1009-11e9-287f-65bf770f7c3e"
 OpticalProperties = "8b3727e0-1008-11e9-018f-895af1a7be12"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
 [compat]
 julia = "1"
