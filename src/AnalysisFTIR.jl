@@ -88,7 +88,7 @@ function fit_data(emissivity_model, xdata, ydata, p; save = false, outputfilenam
     df_fit = value_of_fit(fit,opt)
     if save == true
         save_data([xdata  ydata] ,[xdata fit_dat], outputfilename)
-        writetable(outputfilename*"_parameters",df_fit)
+        CSV.write("fit_parameters_"*outputfilename,df_fit)
     end
     data = [xdata  ydata  fit_dat]
     println(df_fit)
@@ -109,7 +109,7 @@ function save_data(data_exp,data_sim,outputfilename)
     df[!,:freq] = data_exp[:,1]
     df[!,:Data] = data_exp[:,2]
     df[!,:Fit]  = data_sim[:,2]
-    writetable(outputfilename, df,separator = ' ')
+    CSV.write(outputfilename, df)
 end
 
 " Sliding window average "
